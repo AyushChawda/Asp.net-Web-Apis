@@ -13,10 +13,21 @@ namespace Web_APIS.Controllers
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
-        public ActionResult <IEnumerable<StudentModel>> getStudentName()
+        public ActionResult <IEnumerable<StudentDOTs>> getStudentName()
         {
+            var students = new List<StudentDOTs>();
+            foreach(var item in StudentRepository.Students)
+            {
+                StudentDOTs obj = new StudentDOTs()
+                {
+                    id = item.id,
+                    name=item.name,
+                    standrad=item.standrad
+                };
+                students.Add(obj);
+            }
 
-            return Ok(StudentRepository.Students);
+            return Ok(students);
         }
 
         [HttpGet("{id}")]
@@ -27,7 +38,7 @@ namespace Web_APIS.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
 
-        public ActionResult<StudentModel> getStudentById(int id)
+        public ActionResult<StudentDOTs> getStudentById(int id)
         {
             var student = StudentRepository.Students.Where(x => x.id == id).FirstOrDefault();
             if (id<=0)
@@ -39,7 +50,14 @@ namespace Web_APIS.Controllers
                 return NotFound($"The id is not valid please enter the correct one");
             }
 
-            return Ok(student);
+            StudentDOTs obj = new StudentDOTs()
+            {
+                id = student.id,
+                name = student.name,
+                standrad = student.standrad
+            };
+
+            return Ok(obj);
         }
 
         [HttpGet("{name:alpha}")]
@@ -57,7 +75,14 @@ namespace Web_APIS.Controllers
                 return NotFound($"The name is not valid please enter the correct one");
             }
 
-            return student;
+            StudentDOTs obj = new StudentDOTs()
+            {
+                id = student.id,
+                name = student.name,
+                standrad = student.standrad
+            };
+
+            return Ok(obj);
         }
 
         [HttpDelete("{id}")]
@@ -65,13 +90,14 @@ namespace Web_APIS.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
+        
         public ActionResult DeleteStudent(int id)
         {
             var student = StudentRepository.Students.Where(x => x.id == id).FirstOrDefault();
             if (student == null)
             {
                 
-                return NotFound();
+                return NotFound($"The id is not valid please enter the correct one");
             }
 
             StudentRepository.Students.Remove(student);

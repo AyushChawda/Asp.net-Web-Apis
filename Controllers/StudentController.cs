@@ -11,37 +11,71 @@ namespace Web_APIS.Controllers
     public class StudentController : ControllerBase
     {
         [HttpGet]
-        public IEnumerable<StudentModel> getStudentName()
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public ActionResult <IEnumerable<StudentModel>> getStudentName()
         {
 
-            return StudentRepository.Students;
+            return Ok(StudentRepository.Students);
         }
 
         [HttpGet("{id}")]
-        public StudentModel getStudentById(int id)
-        {
 
-            return StudentRepository.Students.Where(x => x.id == id).FirstOrDefault();
+
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+
+        public ActionResult<StudentModel> getStudentById(int id)
+        {
+            var student = StudentRepository.Students.Where(x => x.id == id).FirstOrDefault();
+            if (id<=0)
+            {
+                return BadRequest();
+            }
+            if (student == null)
+            {
+                return NotFound($"The id is not valid please enter the correct one");
+            }
+
+            return Ok(student);
         }
 
         [HttpGet("{name:alpha}")]
-        public StudentModel getStudentByName(string name)
-        {
 
-            return StudentRepository.Students.Where(x => x.name == name).FirstOrDefault();
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+
+        public ActionResult<StudentModel> getStudentByName(string name)
+        {
+            var student = StudentRepository.Students.Where(x => x.name == name).FirstOrDefault();
+
+            if (student == null)
+            {
+                return NotFound($"The name is not valid please enter the correct one");
+            }
+
+            return student;
         }
 
         [HttpDelete("{id}")]
 
-        public bool DeleteStudent(int id)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public ActionResult DeleteStudent(int id)
         {
             var student = StudentRepository.Students.Where(x => x.id == id).FirstOrDefault();
-            if (student!=null)
+            if (student == null)
             {
-                StudentRepository.Students.Remove(student);
+                
+                return NotFound();
             }
-            
-            return true;
+
+            StudentRepository.Students.Remove(student);
+            return Ok();
         }
     }
 }

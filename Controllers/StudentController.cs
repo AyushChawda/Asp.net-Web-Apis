@@ -2,6 +2,7 @@
 using System.Xml.Linq;
 using Web_APIS.Models;
 using System.Collections.Generic;
+using Web_APIS.Models.DOTs;
 
 
 namespace Web_APIS.Controllers
@@ -13,12 +14,12 @@ namespace Web_APIS.Controllers
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(500)]
-        public ActionResult <IEnumerable<StudentDOTs>> getStudentName()
+        public ActionResult <IEnumerable<StudentDTOs>> getStudentName()
         {
-            var students = new List<StudentDOTs>();
+            var students = new List<StudentDTOs>();
             foreach(var item in StudentRepository.Students)
             {
-                StudentDOTs obj = new StudentDOTs()
+                StudentDTOs obj = new StudentDTOs()
                 {
                     id = item.id,
                     name=item.name,
@@ -38,7 +39,7 @@ namespace Web_APIS.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
 
-        public ActionResult<StudentDOTs> getStudentById(int id)
+        public ActionResult<StudentDTOs> getStudentById(int id)
         {
             var student = StudentRepository.Students.Where(x => x.id == id).FirstOrDefault();
             if (id<=0)
@@ -50,7 +51,7 @@ namespace Web_APIS.Controllers
                 return NotFound($"The id is not valid please enter the correct one");
             }
 
-            StudentDOTs obj = new StudentDOTs()
+            StudentDTOs obj = new StudentDTOs()
             {
                 id = student.id,
                 name = student.name,
@@ -75,7 +76,7 @@ namespace Web_APIS.Controllers
                 return NotFound($"The name is not valid please enter the correct one");
             }
 
-            StudentDOTs obj = new StudentDOTs()
+            StudentDTOs obj = new StudentDTOs()
             {
                 id = student.id,
                 name = student.name,

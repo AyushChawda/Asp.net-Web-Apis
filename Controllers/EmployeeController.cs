@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Web_APIS.Models;
+using Web_APIS.Models.DOTs;
+using Web_APIS.Models.Static_Files;
 
 namespace Web_APIS.Controllers
 {
@@ -8,9 +11,22 @@ namespace Web_APIS.Controllers
     public class EmployeeController : ControllerBase
     {
         [HttpGet]
-        public List<string> get()
+        public ActionResult<IEnumerable<EmployeeModel>> getAllEmployee()
         {
-            return new List<string>() { "Ayush" ,"Vaibhav", "Raghav" };
+            var EmployeeList = new List<EmployeeDTOs>();
+            foreach(var item in EmployeeRepository.EmployeeList)
+            {
+                EmployeeDTOs obj = new EmployeeDTOs()
+                {
+                    id = item.id,
+                    empName = item.empName,
+                    empPosition = item.empPosition,
+
+                };
+                EmployeeList.Add(obj);
+            }
+
+            return Ok(EmployeeList);
         }
     }
 }

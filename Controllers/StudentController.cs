@@ -32,8 +32,7 @@ namespace Web_APIS.Controllers
         }
 
         [HttpGet("{id}")]
-
-
+        //[Route("${id}", Name = "getStudentById")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -87,11 +86,9 @@ namespace Web_APIS.Controllers
         }
 
         [HttpDelete("{id}")]
-
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        
         public ActionResult DeleteStudent(int id)
         {
             var student = StudentRepository.Students.Where(x => x.id == id).FirstOrDefault();
@@ -103,6 +100,35 @@ namespace Web_APIS.Controllers
 
             StudentRepository.Students.Remove(student);
             return Ok();
+        }
+
+
+        // Create the post Api and add the data using the model 
+
+        [HttpPost]
+        [Route("Create")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public ActionResult<StudentDTOs> AddStudent([FromBody]StudentModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest();
+            }
+            StudentModel student = new StudentModel()
+            {
+                id = model.id,
+                name = model.name,
+                standrad=model.standrad,
+                age=model.age
+                
+            };
+            StudentRepository.Students.Add(student);
+            
+            // Using Created At Route
+
+            return CreatedAtRoute("getStudentById", new { id = model.id }, model);
         }
     }
 }

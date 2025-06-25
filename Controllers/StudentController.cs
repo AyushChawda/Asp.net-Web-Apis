@@ -108,7 +108,7 @@ namespace Web_APIS.Controllers
         [HttpPost]
         [Route("Create")]
         [ProducesResponseType(201)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         public ActionResult<StudentDTOs> AddStudent([FromBody]StudentModel model)
         {

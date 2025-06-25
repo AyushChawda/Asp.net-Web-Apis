@@ -108,7 +108,7 @@ namespace Web_APIS.Controllers
         [HttpPost]
         [Route("Create")]
         [ProducesResponseType(201)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public ActionResult<StudentDTOs> AddStudent([FromBody]StudentModel model)
         {
@@ -130,5 +130,33 @@ namespace Web_APIS.Controllers
 
             return CreatedAtRoute("getStudentById", new { id = model.id }, model);
         }
+
+        // Post Apis
+        [HttpPut]
+        [Route("update")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public ActionResult UpdateStudent([FromBody] StudentModel model)
+        {
+            if (model == null || model.id <= 0)
+            {
+                return BadRequest();
+            }
+
+            var existingStudent = StudentRepository.Students.Where(x => x.id == model.id).FirstOrDefault();
+
+            if (existingStudent == null)
+            {
+                return NotFound();
+            }
+
+            existingStudent.name = model.name;
+            existingStudent.standrad = model.standrad;
+            existingStudent.age = model.age;
+
+            return Ok();
+        }
+
     }
 }
